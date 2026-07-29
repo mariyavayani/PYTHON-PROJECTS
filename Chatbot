@@ -1,0 +1,40 @@
+def get_reply(user_input):
+    """Return a predefined reply based on user input."""
+    user_input = user_input.lower().strip()
+
+    if user_input in ["hello", "hi", "hey"]:
+        return "Hi! How can I help you today?"
+    elif user_input in ["how are you", "how are you?"]:
+        return "I'm fine, thanks for asking! How about you?"
+    elif user_input in ["bye", "goodbye", "see you"]:
+        return "Goodbye! Have a great day!"
+    elif user_input in ["your name", "who are you"]:
+        return "I'm a simple rule-based chatbot!"
+    elif user_input in ["help", "commands"]:
+        return "You can say: hello, how are you, bye, your name, help"
+    else:
+        return "I'm not sure how to respond to that. Type 'help' to see what I can do."
+
+
+def chat():
+    """Main chat loop."""
+    print("🤖 Chatbot: Hello! Type 'bye' to exit.\n")
+
+    while True:
+        user_input = input("You: ")
+
+        if user_input.strip() == "":        # handle empty input
+            print("🤖 Chatbot: Please type something!\n")
+            continue
+
+        reply = get_reply(user_input)       # get reply for ALL inputs
+        print("🤖 Chatbot:", reply)
+        print()
+
+        if user_input.lower().strip() in ["bye", "goodbye", "see you"]:
+            break                           # exit after showing goodbye
+
+
+# Run the chatbot
+if __name__ == "__main__":
+    chat()
