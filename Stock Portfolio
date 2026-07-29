@@ -1,0 +1,140 @@
+
+STOCK_PRICES = {
+    "AAPL":  180,   
+    "TSLA":  250,   
+    "GOOGL": 140,   
+    "AMZN":  175,   
+    "MSFT":  310,   
+    "META":  300,   
+}
+
+
+def show_available_stocks():
+   
+    print("\nAvailable Stocks:")
+    print("-" * 30)
+    print(f"{'Stock':<10} {'Price (USD)':>10}")
+    print("-" * 30)
+    for symbol, price in STOCK_PRICES.items():
+        print(f"{symbol:<10} ${price:>9}")
+    print("-" * 30)
+
+
+def get_portfolio():
+   
+    portfolio = {}
+
+    print("\nEnter stock symbol and quantity (type 'done' to finish):")
+
+    while True:
+        symbol = input("\nStock symbol: ").upper().strip()
+
+        if symbol == "DONE":
+            break
+
+        if symbol not in STOCK_PRICES:
+            print(f"   '{symbol}' not found. Available: {', '.join(STOCK_PRICES)}")
+            continue
+
+        try:
+            qty = int(input(f"  Quantity of {symbol}: "))
+            if qty <= 0:
+                print("   Quantity must be greater than 0.")
+                continue
+        except ValueError:
+            print("   Please enter a valid number.")
+            continue
+
+        
+        if symbol in portfolio:
+            portfolio[symbol] += qty
+        else:
+            portfolio[symbol] = qty
+
+        print(f"   Added {qty} x {symbol} @ ${STOCK_PRICES[symbol]}")
+
+    return portfolio
+
+
+def calculate_portfolio(portfolio):
+    
+    results = []
+    total = 0
+
+    for symbol, qty in portfolio.items():
+        price     = STOCK_PRICES[symbol]
+        value     = price * qty
+        total    += value
+        results.append((symbol, qty, price, value))
+
+    return results, total
+
+
+def display_summary(results, total):
+    """Print a formatted portfolio summary."""
+    print("\n" + "=" * 45)
+    print("        PORTFOLIO SUMMARY")
+    print("=" * 45)
+    print(f"{'Stock':<8} {'Qty':>5} {'Price':>8} {'Value':>10}")
+    print("-" * 45)
+
+    for symbol, qty, price, value in results:
+        print(f"{symbol:<8} {qty:>5} ${price:>7} ${value:>9}")
+
+    print("-" * 45)
+    print(f"{'TOTAL INVESTMENT':>33}  ${total:>9}")
+    print("=" * 45)
+
+
+def save_to_file(results, total):
+    """Save portfolio summary to a .txt file."""
+    filename = "portfolio_summary.txt"
+
+    with open(filename, "w") as f:
+        f.write("STOCK PORTFOLIO SUMMARY\n")
+        f.write("=" * 45 + "\n")
+        f.write(f"{'Stock':<8} {'Qty':>5} {'Price':>8} {'Value':>10}\n")
+        f.write("-" * 45 + "\n")
+
+        for symbol, qty, price, value in results:
+            f.write(f"{symbol:<8} {qty:>5} ${price:>7} ${value:>9}\n")
+
+        f.write("-" * 45 + "\n")
+        f.write(f"{'TOTAL INVESTMENT':>33}  ${total:>9}\n")
+
+    print(f"\n Summary saved to '{filename}'")
+
+
+def run_tracker():
+    """Main function to run the stock portfolio tracker."""
+    print("=" * 45)
+    print("    STOCK PORTFOLIO TRACKER")
+    print("=" * 45)
+
+    # Step 1 — Show available stocks
+    show_available_stocks()
+
+    # Step 2 — Get user portfolio input
+    portfolio = get_portfolio()
+
+    if not portfolio:
+        print("\n  No stocks entered. Exiting.")
+        return
+
+    # Step 3 — Calculate values
+    results, total = calculate_portfolio(portfolio)
+
+    # Step 4 — Display summary
+    display_summary(results, total)
+
+    # Step 5 — Optionally save to file
+    save = input("\n Save summary to file? (yes/no): ").lower().strip()
+    if save in ["yes", "y"]:
+        save_to_file(results, total)
+
+    print("\n Done! Thank you for using Stock Portfolio Tracker.\n")
+
+
+
+if __name__ == "__main__":
+    run_tracker()
